@@ -55,9 +55,9 @@ module.exports = {
     MAX_RETRIES: 3,
     
     // GitHub Integration (Optional)
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN || '',
-    GITHUB_REPO_OWNER: process.env.GITHUB_REPO_OWNER || '',
-    GITHUB_REPO_NAME: process.env.GITHUB_REPO_NAME || '',
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN || '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',
+    GITHUB_REPO_OWNER: process.env.GITHUB_REPO_OWNER || 'https://github.com/ayanmdoz',
+    GITHUB_REPO_NAME: process.env.GITHUB_REPO_NAME || 'https://github.com/ayanmdoz/QUEEN-ELISA',
     
     // Copyright Information
     COPYRIGHT: {
