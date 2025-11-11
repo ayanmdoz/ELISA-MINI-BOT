@@ -13,7 +13,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const path = require('path');
 const chalk = require('chalk');
-
+const sessionManager = require('./sessionManager');
 const config = require('./config');
 const { connectDatabase } = require('./database/connection');
 const { generalLimiter } = require('./middleware/rateLimiter');

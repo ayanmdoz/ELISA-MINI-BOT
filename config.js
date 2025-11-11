@@ -6,6 +6,17 @@
  */
 
 module.exports = {
+    // SESSION CONFIGURATION
+    SESSION_ID: process.env.SESSION_ID || "",
+    SESSION_TYPE: process.env.SESSION_TYPE || "local", // local, mega, url
+    
+    // MEGA.NZ CONFIG (opcional)
+    MEGA_EMAIL: process.env.MEGA_EMAIL || "salimoafonso76@gmail.com",
+    MEGA_PASSWORD: process.env.MEGA_PASSWORD || "djsalass1&2#",
+    
+    // SESSION MANAGEMENT
+    AUTO_DOWNLOAD_SESSION: true,
+    SESSION_BACKUP: true,
     // Application Settings
     APP_NAME: 'QUEEN-MINI',
     APP_VERSION: '2.0.0',
