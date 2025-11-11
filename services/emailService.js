@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 const config = require('../config');
 
 // Create transporter
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
     host: config.EMAIL_HOST,
     port: config.EMAIL_PORT,
     secure: false,
