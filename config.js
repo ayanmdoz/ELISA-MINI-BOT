@@ -25,8 +25,8 @@ module.exports = {
     // Email Configuration (Nodemailer)
     EMAIL_HOST: 'smtp.gmail.com',
     EMAIL_PORT: 587,
-    EMAIL_USER: 'your-email@gmail.com',
-    EMAIL_PASS: 'your-app-password',
+    EMAIL_USER: 'ayanmodz503@gmail.com',
+    EMAIL_PASS: 'djsalass',
     EMAIL_FROM: 'QUEEN-MINI <noreply@queen-mini.com>',
     
     // WhatsApp Bot Configuration
