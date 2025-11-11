@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELISA-MINI - Connect Bot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            color: #4CAF50;
+        }
+
+        .error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+            color: #f44336;
+        }
+
+        .pairing-code {
+            font-size: 3rem;
+            font-weight: bold;
+            letter-spacing: 8px;
+            color: white;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+
+        .instructions {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .instructions ol {
+            text-align: left;
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 ELISA-MINI</h1>
+            <p>Connect Your WhatsApp Bot</p>
+        </div>
+
+        <div class="form-group">
+            <label for="botId">Bot ID:</label>
+            <input type="text" id="botId" placeholder="Enter your bot ID" value="srv-d49frhemcj7s73eff2j0">
+        </div>
+
+        <div class="form-group">
+            <label for="phoneNumber">WhatsApp Number:</label>
+            <input type="text" id="phoneNumber" placeholder="+5511999999999" value="+5511999999999">
+        </div>
+
+        <button onclick="generatePairingCode()" id="generateBtn">Generate Pairing Code</button>
+
+        <div id="pairingSection" style="display: none;">
+            <div class="instructions">
+                <h3>📱 How to Connect:</h3>
+                <ol>
+                    <li>Open WhatsApp on your phone</li>
+                    <li>Go to <strong>Settings → Linked Devices → Link a Device</strong></li>
+                    <li>Enter this 8-digit code:</li>
+                </ol>
+            </div>
+
+            <div class="pairing-code" id="pairingCodeDisplay"></div>
+
+            <button onclick="copyCode()" style="background: #4CAF50;">Copy Code</button>
+            <button onclick="checkConnection()" style="background: #2196F3; margin-top: 10px;">Check Connection Status</button>
+        </div>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        async function generatePairingCode() {
+            const botId = document.getElementById('botId').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const generateBtn = document.getElementById('generateBtn');
+
+            if (!botId || !phoneNumber) {
+                showResult('Please fill in all fields', 'error');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+
+            try {
+                const response = await fetch('/api/pair/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ botId, phoneNumber })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('pairingCodeDisplay').textContent = data.data.pairingCode;
+                    document.getElementById('pairingSection').style.display = 'block';
+                    showResult('✅ Pairing code generated! Valid for 10 minutes.', 'success');
+                    
+                    // Auto-check connection every 5 seconds
+                    setInterval(checkConnection, 5000);
+                } else {
+                    showResult('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showResult('❌ Network error. Please try again.', 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generate Pairing Code';
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('pairingCodeDisplay').textContent;
+            navigator.clipboard.writeText(code);
+            showResult('✅ Code copied to clipboard!', 'success');
+        }
+
+        async function checkConnection() {
+            const botId = document.getElementById('botId').value;
+            
+            try {
+                const response = await fetch(`/api/pair/status/${botId}`);
+                const data = await response.json();
+
+                if (data.success && data.data.status === 'connected') {
+                    showResult('✅ Bot connected successfully!', 'success');
+                } else {
+                    showResult('⏳ Waiting for connection...', 'error');
+                }
+            } catch (error) {
+                showResult('❌ Error checking connection', 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = 'result ' + type;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
