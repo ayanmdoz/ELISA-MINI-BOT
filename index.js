@@ -23,7 +23,8 @@ const authRoutes = require('./routes/auth');
 const botRoutes = require('./routes/bot');
 const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
-
+// Adicione esta rota após as outras importações
+const pairRoutes = require('./routes/pair');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -53,10 +54,14 @@ global.io = io;
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/pair', pairRoutes);
 app.use('/api/bot', botRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
-
+// Adicione esta rota para a página de pairing
+app.get('/pair', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pair.html'));
+});
 // Serve main application
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
