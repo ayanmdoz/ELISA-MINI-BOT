@@ -7,7 +7,7 @@
 
 module.exports = {
     // SESSION CONFIGURATION
-    SESSION_ID: process.env.SESSION_ID || "",
+    SESSION_ID: process.env.SESSION_ID || "IZUKA~aIwknC7B#Av_3Mi-hqT_RbE2oIeUV_4fMqbNZYG3Jw0xfESwJ60Y",
     SESSION_TYPE: process.env.SESSION_TYPE || "local", // local, mega, url
     
     // MEGA.NZ CONFIG (opcional)
